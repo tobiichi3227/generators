@@ -27,10 +27,10 @@ let special_events = [];
 let commit_hash = "";
 
 // using async and await to prevent fetching the data too late...
-async function fetch_data(commit_hash) {
+async function fetch_data(requied_commit_hash) {
   let prefix = "";
-  if (commit_hash) {
-    prefix = `https://raw.githubusercontent.com/LifeAdventurer/generators/${commit_hash}/fortune_generator/`;
+  if (requied_commit_hash) {
+    prefix = `https://raw.githubusercontent.com/LifeAdventurer/generators/${requied_commit_hash}/fortune_generator/`;
   }
   await fetch(`${prefix}./json/fortune.json`)
     .then((response) => response.json())
@@ -353,9 +353,11 @@ async function init_page() {
       }
     }
 
-    special_events_index = ip.split(".").map(num => parseInt(num)).reduce((acc, cur) => acc + cur);
-    special_events_index %= current_day_special_events.length;
-    special_events_index = current_day_special_events[special_events_index];
+    if (current_day_special_events.length) {
+      special_events_index = ip.split(".").map(num => parseInt(num)).reduce((acc, cur) => acc + cur);
+      special_events_index %= current_day_special_events.length;
+      special_events_index = current_day_special_events[special_events_index];
+    }
 
     // if there is upcoming event then show
     for (let eventIndex = 0; eventIndex < showSpecialEventCount; eventIndex++) {
